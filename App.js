@@ -1,72 +1,26 @@
 import { StatusBar } from 'expo-status-bar';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { StyleSheet, Text, View, Switch, ScrollView, RefreshControl } from 'react-native';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+// import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { WebView } from 'react-native-webview';
-import StatusBarItem from './components/StatusBarItem.js'
-import BottomBar from './components/BottomBar.js'
+// import BottomBar from './components/BottomBar.js'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Home from './views/home/index.js';
+import Community from './views/community/index.js';
+import Detail from './views/detail/index.js'
+import { Button } from '@rneui/base';
+import { getProducts } from './request/api.js';
+
+const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
+
 
 const wait = (timeout) => {
   return new Promise(resolve => {
     setTimeout(resolve, timeout);
   });
-}
-
-export default function App() {
-  const [isEnabled, setIsEnabled] = useState(false)
-  const [refreshing, setRefreshing] = useState(false)
-  const itemList = [
-    { compo: StatusBarItem, itemName: '资讯' },
-    { compo: StatusBarItem, itemName: '社区' },
-    { compo: StatusBarItem, itemName: '战绩' },
-    { compo: StatusBarItem, itemName: '我的' }
-  ]
-  const toggleSwitch = () => setIsEnabled(status => !status);
-
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    wait(2000).then(() => setRefreshing(false));
-  }, []);
-
-  // const insets = useSafeAreaInsets();
-
-  // const runFirst = `
-  //   document.body.style.backgroundColor = 'red';
-  //   setTimeout(function() { window.alert('hi') }, 2000);
-  //   true; // note: this is required, or you'll sometimes get silent failures
-  // `;
-
-  return (
-    <SafeAreaProvider >
-      <SafeAreaView style={styles.container} edges={['right', 'top', 'left']}>
-        <ScrollView style={{ flex: 1 }} refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }>
-          <Text style={styles.textConf}>Open up App.js to start working on your app!</Text>
-          <Switch
-            trackColor={{ false: "#767577", true: "#81b0ff" }}
-            thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
-            ios_backgroundColor="#3e3e3e"
-            onValueChange={toggleSwitch}
-            value={isEnabled}
-          />
-          <WebView
-            originWhitelist={['*']}
-            source={{ uri: 'https://player.bilibili.com/player.html?aid=268024687&bvid=BV1HY41167oQ&cid=1039703386&page=1' }}
-            // source={{
-            //   html: `<iframe src="//player.bilibili.com/player.html?aid=268024687&bvid=BV1HY41167oQ&cid=1039703386&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>`
-            // }}
-            style={{ width: 375, height: 200 }}
-            startInLoadingState={true}
-            javaScriptEnabled={true}
-          />
-          {/* injectedJavaScript={runFirst} */}
-        </ScrollView>
-        <StatusBar style="auto" />
-        <BottomBar />
-      </SafeAreaView>
-    </SafeAreaProvider>
-  );
 }
 
 const styles = StyleSheet.create({
@@ -76,12 +30,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  textConf: {
-    color: 'red',
-    letterSpacing: 2,
-    textShadowRadius: 2,
-    textShadowColor: '#ff8c00'
-  },
   bottom: {
     display: 'flex',
     flexDirection: 'row',
@@ -90,3 +38,105 @@ const styles = StyleSheet.create({
     backgroundColor: "#cfcfcf"
   }
 });
+
+function HomeTabs() {
+  return (
+    <Tab.Navigator >
+      <Tab.Screen name="Home" component={Home} options={{ title: '首页', tabBarBadge: 3, tabBarActiveTintColor: 'green' }} />
+      <Tab.Screen name="Community" component={Community} options={{ title: '社区', tabBarActiveTintColor: 'green' }} />
+    </Tab.Navigator>
+  );
+}
+
+// function backButo(params) {
+
+// }
+
+export default function App() {
+  const postData = async () => {
+    const dateObj = new Date()
+    const response = await fetch("https://rn-request-default-rtdb.europe-west1.firebasedatabase.app/products.json", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        id: 1,
+        name: '贴纸',
+        price: 20,
+        createTime: `${dateObj.getHours()}:${dateObj.getMinutes()}:${dateObj.getSeconds()}`
+      })
+    }).then(res => res.json())
+    console.log(response.name);
+  };
+
+  const getData = async () => {
+    const response = await fetch("https://rn-request-default-rtdb.europe-west1.firebasedatabase.app/products.json", {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(res => res.json())
+    console.log(response);
+  };
+
+  const [isEnabled, setIsEnabled] = useState(false)
+  const [refreshing, setRefreshing] = useState(false)
+
+  useEffect(() => {
+    getProducts().then(res => {
+      console.log(res);
+    });
+  }, []);
+
+  const toggleSwitch = () => setIsEnabled(status => !status);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
+
+  // const insets = useSafeAreaInsets();
+
+  return (
+    // <SafeAreaProvider>
+    //   <SafeAreaView style={styles.container} edges={['right', 'top', 'left']}>
+    //     <ScrollView style={{ flex: 1 }} refreshControl={
+    //       <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+    //     }>
+    //       <Switch
+    //         trackColor={{ false: "#767577", true: "#81b0ff" }}
+    //         thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
+    //         ios_backgroundColor="#3e3e3e"
+    //         onValueChange={toggleSwitch}
+    //         value={isEnabled}
+    //       />
+    //       <WebView
+    //         originWhitelist={['*']}
+    //         source={{ uri: 'https://player.bilibili.com/player.html?aid=268024687&bvid=BV1HY41167oQ&cid=1039703386&page=1' }}
+    //         // source={{
+    //         //   html: '<iframe src="//player.bilibili.com/player.html?aid=268024687&bvid=BV1HY41167oQ&cid=1039703386&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>'
+    //         // }}
+    //         style={{ width: 375, height: 200 }}
+    //         // startInLoadingState={true}
+    //         javaScriptEnabled={true}
+    //       />
+    //     </ScrollView>
+    //     <StatusBar style="auto" />
+    //     {/* <BottomBar /> */}
+    //   </SafeAreaView>
+    // </SafeAreaProvider>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="HomeTab" component={HomeTabs} options={{ headerShown: false }} />
+        <Stack.Screen name="Detail" component={Detail} options={({ navigation }) => ({
+          title: '详情页',
+          headerLeft: () => (
+            <Button title={'返回'} onPress={() => navigation.goBack()} />
+          ),
+        })} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
