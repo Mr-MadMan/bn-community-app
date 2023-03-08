@@ -1,8 +1,5 @@
-import { Button } from '@rneui/base';
-import { StyleSheet, View, Text } from 'react-native';
-import Detail from '../detail/index.js'
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-const Stack = createNativeStackNavigator();
+import { Button } from '@rneui/base'
+import { StyleSheet, View } from 'react-native'
 
 export default function Home({ navigation }) {
   const styles = StyleSheet.create({
@@ -12,7 +9,7 @@ export default function Home({ navigation }) {
       justifyContent: 'center',
       alignItems: 'center',
     }
-  });
+  })
 
   return (
     <View style={styles.container}>
