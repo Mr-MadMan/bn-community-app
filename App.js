@@ -10,6 +10,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import Home from './views/home/index.js'
 import Community from './views/community/index.js'
 import Detail from './views/detail/index.js'
+import Login from './views/login/index.js'
 import My from './views/my/index.js'
 import { Button } from '@rneui/base'
 import { getProducts } from './request/api.js'
@@ -64,7 +65,7 @@ function HomeTabs() {
     })}>
       <Tab.Screen name="Home" component={Home} options={{ title: '首页' }} />
       <Tab.Screen name="Community" component={Community} options={{ title: '社区', tabBarBadge: 3 }} />
-      <Tab.Screen name="My" component={My} options={{ title: '我的' }} />
+      <Tab.Screen name="Login" component={Login} options={{ title: '我的' }} />
     </Tab.Navigator>
   )
 }
@@ -105,18 +106,18 @@ export default function App() {
     //         javaScriptEnabled={true}
     //       />
     //     </ScrollView>
-    //     <StatusBar style="auto" />
     //     {/* <BottomBar /> */}
     //   </SafeAreaView>
     // </SafeAreaProvider>
     <NavigationContainer>
+      <StatusBar style="auto" networkActivityIndicatorVisible={false} />
       <Stack.Navigator>
         <Stack.Screen name="HomeTab" component={HomeTabs} options={{ headerShown: false }} />
         <Stack.Screen name="Detail" component={Detail} options={({ navigation }) => ({
-          title: '详情页',
-          headerLeft: () => (
-            <Button title={'返回'} onPress={() => navigation.goBack()} />
-          ),
+          title: '详情页'
+          // headerLeft: () => (
+          //   <Button title={'返回'} onPress={() => navigation.goBack()} />
+          // ),
         })} />
       </Stack.Navigator>
     </NavigationContainer>

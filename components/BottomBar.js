@@ -1,9 +1,9 @@
 import React from 'react'
-import { Tab } from '@rneui/base';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Tab } from '@rneui/base'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export default function BottomBar() {
-  const [index, setIndex] = React.useState(0);
+  const [index, setIndex] = React.useState(0)
 
   const { bottom } = useSafeAreaInsets()
 
@@ -48,5 +48,5 @@ export default function BottomBar() {
         containerStyle={activeFunc}
       />
     </Tab>
-  );
+  )
 }
