@@ -3,8 +3,61 @@ import { useState } from 'react'
 import { FlatList } from 'react-native'
 import { StyleSheet, View, Text } from 'react-native'
 
+
+const DATA = [
+  {
+    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
+    title: 'First Item',
+  },
+  {
+    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
+    title: 'Second Item',
+  },
+  {
+    id: '58694a0f-3da1-471f-bd96-145571e29d72',
+    title: 'Third Item',
+  },
+  {
+    id: '58694a0f-3da1-471f-bd82-145571e29d72',
+    title: 'Fourth Item',
+  },
+  {
+    id: '58694a0f-3da1-471f-bd83-145571e29d72',
+    title: 'Fifth Item',
+  },
+  {
+    id: '58694a0f-3da1-471f-bd84-145571e29d72',
+    title: 'Sixth Item',
+  },
+  {
+    id: '58694a0f-3da1-471f-bd85-145571e29d72',
+    title: 'Seventh Item',
+  },
+  {
+    id: '58694a0f-3da1-471f-bd86-145571e29d72',
+    title: 'kfjkjakfja',
+  },
+  {
+    id: '58694a0f-3da1-471f-bd87-145571e29d72',
+    title: 'kfljakj',
+  },
+  {
+    id: '58694a0f-3da1-471f-bd88-145571e29d72',
+    title: 'kjfakjgva',
+  },
+  {
+    id: '58694a0f-3da1-471f-bd89-145571e29d72',
+    title: 'kgjalknva',
+  },
+  {
+    id: '58694a0f-3da1-471f-bd90-145571e29d72',
+    title: 'klgjal;hjb;ojs',
+  }
+]
+
 export default function Home({ navigation }) {
   const [index, setIndex] = useState(0)
+  const [listData, setListData] = useState(DATA)
 
   const styles = StyleSheet.create({
     container: {
@@ -23,60 +76,8 @@ export default function Home({ navigation }) {
       backgroundColor: 'transparent',
     },
     listItem: {
-
     }
   })
-
-  const DATA = [
-    {
-      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-      title: 'First Item',
-    },
-    {
-      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-      title: 'Second Item',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d72',
-      title: 'Third Item',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd82-145571e29d72',
-      title: 'Fourth Item',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd83-145571e29d72',
-      title: 'Fifth Item',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd84-145571e29d72',
-      title: 'Sixth Item',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd85-145571e29d72',
-      title: 'Seventh Item',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd86-145571e29d72',
-      title: 'kfjkjakfja',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd87-145571e29d72',
-      title: 'kfljakj',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd88-145571e29d72',
-      title: 'kjfakjgva',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd89-145571e29d72',
-      title: 'kgjalknva',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd90-145571e29d72',
-      title: 'klgjal;hjb;ojs',
-    }
-  ]
 
   const renderItem = ({ item, idx }) => {
     return (
@@ -87,7 +88,10 @@ export default function Home({ navigation }) {
   }
 
   const onLoad = () => {
-    DATA.push({ id: `58694a0f-3da1-471f-b${Math.floor(Math.random() * 900 + 100)}-145571e29d72`, title: `Hello~${Math.floor(Math.random() * 900 + 100)}` })
+    setListData(() => {
+      const newItem = { id: `58694a0f-3da1-471f-b${Math.floor(Math.random() * 900 + 100)}-145571e29d72`, title: `Hello~${Math.floor(Math.random() * 900 + 100)}` }
+      return [...listData, newItem]
+    })
   }
 
   return (
@@ -145,7 +149,7 @@ export default function Home({ navigation }) {
       <TabView value={index} onChange={setIndex} >
         <TabView.Item style={{ backgroundColor: '', width: '100%' }}>
           <FlatList
-            data={DATA}
+            data={listData}
             renderItem={renderItem}
             keyExtractor={(item) => item.id}
             onEndReachedThreshold={0.05}

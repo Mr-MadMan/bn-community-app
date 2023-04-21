@@ -65,7 +65,7 @@ function HomeTabs() {
     })}>
       <Tab.Screen name="Home" component={Home} options={{ title: '首页' }} />
       <Tab.Screen name="Community" component={Community} options={{ title: '社区', tabBarBadge: 3 }} />
-      <Tab.Screen name="Login" component={Login} options={{ title: '我的' }} />
+      <Tab.Screen name="My" component={My} options={{ title: '我的' }} />
     </Tab.Navigator>
   )
 }

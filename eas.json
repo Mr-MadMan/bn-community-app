@@ -1,6 +1,6 @@
 {
   "cli": {
-    "version": ">= 3.7.2"
+    "version": ">= 0.52.0"
   },
   "build": {
     "development": {
@@ -15,6 +15,7 @@
       "distribution": "internal",
       "channel": "preview",
       "ios": {
+        "simulator": true,
         "resourceClass": "m1-medium"
       },
       "android": {
@@ -25,9 +26,6 @@
       "android": {
         "gradleCommand": ":app:assembleRelease"
       }
-    },
-    "preview3": {
-      "developmentClient": true
     },
     "production": {
       "channel": "production",

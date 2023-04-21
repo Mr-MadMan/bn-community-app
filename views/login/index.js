@@ -7,7 +7,6 @@ import { makeRedirectUri } from 'expo-auth-session'
 import { Alert } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-
 // webClientId=196014439805-f4q9rjedbjvnkmmcl1ttrucgctee59ck.apps.googleusercontent.com
 // https://auth.expo.io/@lormadman/bn-community
 WebBrowser.maybeCompleteAuthSession()
@@ -38,12 +37,15 @@ export default function Login() {
   })
 
   const [request, response, promptAsync] = Google.useAuthRequest({
-    // redirectUri: makeRedirectUri({
-    //   useProxy: true,
-    //   scheme: 'bncommunity'
-    // }),
+    redirectUri: makeRedirectUri({
+      // useProxy: true,
+      scheme: 'bncommunity'
+    }),
+    selectAccount: true,
     expoClientId: '196014439805-f4q9rjedbjvnkmmcl1ttrucgctee59ck.apps.googleusercontent.com',
-    iosClientId: '196014439805-57nro2n2o5tfci7vehjboe0ff2bma5hr.apps.googleusercontent.com.apps.googleusercontent.com',
+    webClientId: '196014439805-f4q9rjedbjvnkmmcl1ttrucgctee59ck.apps.googleusercontent.com',
+    iosClientId: '196014439805-57nro2n2o5tfci7vehjboe0ff2bma5hr.apps.googleusercontent.com',
+    androidClientId: '196014439805-8n5dgpjmeh8k92ne2b6rrkejg9560uc3.apps.googleusercontent.com'
   })
 
   useEffect(() => {
@@ -79,6 +81,15 @@ export default function Login() {
     ])
   }
 
+  const signUp = () => {
+    if (!info.account && !info.account.trim()) {
+      Alert.alert('Account can not be empty')
+    }
+    if (!info.password && !info.password.trim()) {
+      Alert.alert('Password can not be empty')
+    }
+  }
+
   return (
     <View style={styles.container}>
       <Text style={{ fontSize: 16, marginBottom: 8 }}>Email Address</Text>
@@ -101,22 +112,16 @@ export default function Login() {
         onChangeText={value => setInfo((prev) => ({ ...prev, password: value }))}
       />
       <Text style={{ marginBottom: 20 }}>我已同意条款 <Text style={{ color: '#00a087' }}>Free Membership Agreement</Text></Text>
-      {userInfo === null ? (
-        <Button
-          icon={{ name: 'logo-google', type: 'ionicon', color: '#fff' }}
-          buttonStyle={Object.assign({}, styles.btnStyle, { marginBottom: 10, backgroundColor: '#2089dc' })}
-          title="Sign in with Google"
-          disabled={!request}
-          onPress={() => {
-            promptAsync({ showInRecents: true })
-          }}
-        />
-      ) : (
-        <>
-          <Avatar rounded size={64} source={{ uri: userInfo.picture }} />
-          <Text style={styles.text}>{userInfo.name}</Text>
-        </>
-      )}
+      <Button
+        icon={{ name: 'logo-google', type: 'ionicon', color: '#fff' }}
+        buttonStyle={Object.assign({}, styles.btnStyle, { marginBottom: 10, backgroundColor: '#2089dc' })}
+        title="Sign in with Google"
+        disabled={!request}
+        onPress={() => {
+          promptAsync({ showInRecents: true })
+        }}
+      />
+      <Button onPress={signUp}>Create account</Button>
       <Button
         buttonStyle={styles.btnStyle}
         loading={isLoading}
